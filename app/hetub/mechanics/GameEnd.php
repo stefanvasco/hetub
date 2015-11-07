@@ -25,12 +25,13 @@ class GameEnd
 
     public function turnEnded($turnCount)
     {
-        $this->finished = static::MAX_TURNS <= $turnCount ? true : false;
+        $this->finished = static::MAX_TURNS <= $turnCount ? true : $this->finished;
     }
 
     public function playerEliminated()
     {
-        $this->finished = --$this->playersCount <= 1 ? true : false;
+        $this->playersCount--;
+        $this->finished = $this->playersCount <= 1 ? true : $this->finished;
     }
 
     public function finishedGame()

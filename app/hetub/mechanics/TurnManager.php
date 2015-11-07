@@ -21,21 +21,22 @@ class TurnManager
         $this->players = $players;
         $this->getInitialTurnOrder();
         $this->setInitialRoles();
+        $this->currentPlayer = 0;
     }
 
     protected function getInitialTurnOrder()
     {
         uasort($this->players, function ($playerA, $playerB) {
-            if ($playerA->getSpeed() == $playerB->getSpeed()) {
-                if ($playerA->getLuck() == $playerB->getLuck()) {
+            if ($playerA->speed == $playerB->speed) {
+                if ($playerA->luck == $playerB->luck) {
                     return 0;
-                } elseif ($playerA->getLuck() > $playerB->getLuck()) {
+                } elseif ($playerA->luck > $playerB->luck) {
                     return -1;
                 } else {
                     return 1;
                 }
             }
-            return $playerA->getSpeed() > $playerB->getSpeed() ? -1 : 1;
+            return $playerA->speed > $playerB->speed ? -1 : 1;
         });
         $this->turnOrder = array_keys($this->players);
     }
@@ -43,8 +44,7 @@ class TurnManager
     protected function setInitialRoles()
     {
         $this->roles = array_fill_keys($this->turnOrder, false);
-        reset($this->roles);
-        $this->roles[key($roles)] = true;
+        $this->roles[current(array_keys($this->roles))] = true;
     }
 
     protected function changeRoles()
@@ -84,7 +84,8 @@ class TurnManager
 
     public function getRandomDefender()
     {
-        $defenders = array_filter($this->roles, function ($isAttacker) {
+        $currentPlayer = $this->currentPlayer;
+        $defenders = array_filter($this->roles, function ($isAttacker) use ($currentPlayer) {
             return !$isAttacker;
         });
         return array_rand($defenders);
@@ -92,6 +93,7 @@ class TurnManager
 
     public function startTurn()
     {
+        $this->changeRoles();
         $this->computeCurrentTurnOrder();
         $this->currentPlayer = 0;
         $this->turnIsFinished = false;
@@ -102,6 +104,7 @@ class TurnManager
         $proposedNextPlayer = $this->currentPlayer + 1;
         if (array_key_exists($proposedNextPlayer, $this->turnOrder)) {
             $this->currentPlayer = $proposedNextPlayer;
+            $this->changeRoles();
         } else {
             $this->turnIsFinished = true;
             $this->turnCount++;
@@ -114,7 +117,7 @@ class TurnManager
         return $this->turnIsFinished;
     }
 
-    public function registerTurnListener($turnListener)
+    public function registerTurnListener(&$turnListener)
     {
         array_push($this->turnListeners, $turnListener);
     }
