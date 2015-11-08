@@ -34,6 +34,8 @@ abstract class Hero
             Message::display($this->properties['name'].' used evasion! No damage done! ');
             return;
         }
+		$attackDamage-= $this->properties['defence'];
+		
         if(isset($this->skills['defence'])) {
             foreach ($this->skills['defence'] as $defence) {
                 $attackDamage = $defence->enhanceDefence($attackDamage);
