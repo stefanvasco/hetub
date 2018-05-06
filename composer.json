@@ -1,7 +1,9 @@
 {
+  "name": "vaneavasco\hetub",
+  "description": "dummy turn based console game",
   "autoload": {
     "psr-4": {
-      "hetub\\":"app/hetub"
+      "VaneaVasco\\Hetub\\": "src/"
     }
   }
 }

@@ -1,8 +1,9 @@
 <?php
-namespace hetub\heroes;
 
+namespace VaneaVasco\Hetub\Heroes;
 
-class Orderus extends Hero{
+class WildBeast extends Hero
+{
 
     public function attack()
     {
