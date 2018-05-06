@@ -1,6 +1,6 @@
 <?php
 
-namespace VaneaVasco\Hetub\Skills;
+namespace VaneaVasco\Hetub\Skill;
 
 abstract class Skill
 {

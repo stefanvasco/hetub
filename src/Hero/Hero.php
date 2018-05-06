@@ -1,20 +1,26 @@
 <?php
 
-namespace VaneaVasco\Hetub\Heroes;
+namespace VaneaVasco\Hetub\Hero;
 
-use VaneaVasco\Hetub\Display\Message;
+use VaneaVasco\Hetub\Emitter\Emitter;
+use VaneaVasco\Hetub\Skill\Skill;
 
 abstract class Hero
 {
     private $skills;
     private $properties;
     protected $isAlive;
+    /**
+     * @var Emitter
+     */
+    protected $emitter;
 
-    public function __construct()
+    public function __construct(Emitter $emitter)
     {
         $this->skills     = [];
         $this->properties = [];
         $this->isAlive    = true;
+        $this->emitter    = $emitter;
     }
 
     public function attack()
@@ -25,7 +31,7 @@ abstract class Hero
                 $primaryDamage = $attackSkill->enhanceAttack($primaryDamage);
             }
         }
-        Message::display($this->properties['name'] . ' attacks with ' . $primaryDamage . ' damage.');
+        $this->emitter->emit('hero.event', $this->properties['name'] . ' attacks with ' . $primaryDamage . ' damage.');
 
         return $primaryDamage;
     }
@@ -33,7 +39,7 @@ abstract class Hero
     public function defend($attackDamage)
     {
         if ($this->properties['luck'] >= rand(1, 100)) {
-            Message::display($this->properties['name'] . ' used evasion! No damage done! ');
+            $this->emitter->emit('hero.event', $this->properties['name'] . ' used evasion! No damage done! ');
 
             return;
         }
@@ -44,12 +50,12 @@ abstract class Hero
                 $attackDamage = $defence->enhanceDefence($attackDamage);
             }
         }
-        Message::display($this->properties['name'] . ' takes ' . $attackDamage . ' damage.');
+        $this->emitter->emit('hero.event', $this->properties['name'] . ' takes ' . $attackDamage . ' damage.');
         $this->properties['health'] -= $attackDamage;
 
         if ($this->properties['health'] <= 0) {
             $this->isAlive = false;
-            Message::display($this->properties['name'] . ' died!');
+            $this->emitter->emit('hero.event', $this->properties['name'] . ' died!');
         }
     }
 
@@ -65,7 +71,7 @@ abstract class Hero
         $this->properties[$name] = $value;
     }
 
-    public function addSkill($skillType, $newSkill)
+    public function addSkill($skillType, Skill $newSkill)
     {
         $this->skills[$skillType][] = $newSkill;
     }
@@ -79,7 +85,7 @@ abstract class Hero
     {
         $returnString = '';
         foreach ($this->properties as $propertyName => $propertyValue) {
-            $returnString .= "$propertyName:$propertyValue | ";
+            $returnString .= sprintf(" %s: %3s |", $propertyName, $propertyValue);
         }
 
         return rtrim($returnString, '| ');

@@ -1,6 +1,6 @@
 <?php
 
-namespace VaneaVasco\Hetub\Skills;
+namespace VaneaVasco\Hetub\Skill;
 
 use VaneaVasco\Hetub\Display\Message as Message;
 
