@@ -60,4 +60,46 @@ class EnhanceAttackTest extends TestCase
             ],
         ];
     }
+
+    /**
+     * when enhanced attack is not applied
+     *
+     * @dataProvider enhancedAttackNotAppliedProvider
+     *
+     * @param $factor
+     * @param $probability
+     * @param $rand
+     * @param $defaultAttack
+     * @param $enhancedAttack
+     */
+    public function testWhenEnhancedAttackIsNotApplied($factor, $probability, $rand, $defaultAttack, $enhancedAttack)
+    {
+        $this->emitter->expects($this->never())
+                      ->method('emit');
+
+        $rapidStrike = $this->getMockBuilder(RapidStrike::class)
+                            ->setMethods(['getRand'])
+                            ->setConstructorArgs([$factor, $probability, $this->emitter])
+                            ->getMock();
+
+        $rapidStrike->method('getRand')
+                    ->willReturn($rand);
+
+        $enhancedAttackValue = $rapidStrike->enhanceAttack($defaultAttack);
+        $this->assertEquals($enhancedAttack, $enhancedAttackValue);
+    }
+
+    public function enhancedAttackNotAppliedProvider()
+    {
+        return [
+            'a valid enhanced attack' => [
+                'factor'        => 2,
+                'probability'   => 10,
+                'rand'          => 20,
+                'defaultAttack' => 10,
+                'enhancedValue' => 10
+            ],
+        ];
+    }
+
 }
