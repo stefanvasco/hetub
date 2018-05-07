@@ -2,8 +2,6 @@
 
 namespace VaneaVasco\Hetub\Skill;
 
-use VaneaVasco\Hetub\Display\Message as Message;
-
 class MagicShield extends DefensiveSkill
 {
 
@@ -11,7 +9,7 @@ class MagicShield extends DefensiveSkill
     {
         if (rand(1, 100) <= $this->probability) {
             $damage *= $this->factor;
-            Message::display('Magic Shield skill is used!');
+            $this->emitter->emit('skill.event', 'Magic Shield skill is used!');
         }
 
         return $damage;

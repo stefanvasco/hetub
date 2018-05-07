@@ -17,6 +17,7 @@ $emitter->addListener('game.won', $textDisplay);
 $emitter->addListener('game.start', $textDisplay);
 $emitter->addListener('game.stats', $textDisplay);
 $emitter->addListener('hero.event', $textDisplay);
+$emitter->addListener('skill.event', $textDisplay);
 
 $orderus = $heroRepository->getHero('Orderus', 'Orderus the short');
 $beast   = $heroRepository->getHero('WildBeast', 'Brissleback');

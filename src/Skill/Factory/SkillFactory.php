@@ -2,6 +2,7 @@
 
 namespace VaneaVasco\Hetub\Skill\Factory;
 
+use VaneaVasco\Hetub\Emitter\Emitter;
 use VaneaVasco\Hetub\Skill\Skill;
 use VaneaVasco\Hetub\Skill\AttackSkill;
 use VaneaVasco\Hetub\Skill\MagicShield;
@@ -22,11 +23,12 @@ class SkillFactory
     {
         $skills = [];
         if (isset($properties['skills'])) {
+            $emitter = Emitter::getInstance();
             foreach ($properties['skills'] as $skillName => $skill) {
                 $fullSkillName = static::SKILL_NAMESPACE . $skillName;
                 if (class_exists($fullSkillName)) {
-                    $skillObject        = new $fullSkillName($skill['factor'], $skill['probability']);
-                    $skills[$skillName] = $skillObject;
+                    $skillObject            = new $fullSkillName($skill['factor'], $skill['probability'], $emitter);
+                    $skills[$skill['type']] = $skillObject;
                 }
             }
         }
