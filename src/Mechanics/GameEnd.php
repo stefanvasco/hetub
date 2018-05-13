@@ -1,5 +1,6 @@
 <?php
-namespace hetub\mechanics;
+
+namespace VaneaVasco\Hetub\Mechanics;
 
 class GameEnd
 {
@@ -9,7 +10,7 @@ class GameEnd
 
     public function __construct()
     {
-        $this->finished = false;
+        $this->finished     = false;
         $this->playersCount = 0;
     }
 
@@ -38,6 +39,4 @@ class GameEnd
     {
         return $this->finished;
     }
-
-
 }

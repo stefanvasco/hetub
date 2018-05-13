@@ -1,5 +1,6 @@
 <?php
-namespace hetub\mechanics;
+
+namespace VaneaVasco\Hetub\Mechanics;
 
 class TurnManager
 {
@@ -13,7 +14,7 @@ class TurnManager
 
     public function __construct()
     {
-        $this->turnListeners = array();
+        $this->turnListeners = [];
     }
 
     public function init($players)
@@ -36,6 +37,7 @@ class TurnManager
                     return 1;
                 }
             }
+
             return $playerA->speed > $playerB->speed ? -1 : 1;
         });
         $this->turnOrder = array_keys($this->players);
@@ -43,7 +45,7 @@ class TurnManager
 
     protected function setInitialRoles()
     {
-        $this->roles = array_fill_keys($this->turnOrder, false);
+        $this->roles                                    = array_fill_keys($this->turnOrder, false);
         $this->roles[current(array_keys($this->roles))] = true;
     }
 
@@ -61,6 +63,7 @@ class TurnManager
             if ($roles[$playerA] == $roles[$playerB]) {
                 return 0;
             }
+
             return $roles[$playerA] >= $roles[$playerB] ? -1 : 1;
         });
     }
@@ -85,9 +88,10 @@ class TurnManager
     public function getRandomDefender()
     {
         $currentPlayer = $this->currentPlayer;
-        $defenders = array_filter($this->roles, function ($isAttacker) use ($currentPlayer) {
+        $defenders     = array_filter($this->roles, function ($isAttacker) use ($currentPlayer) {
             return !$isAttacker;
         });
+
         return array_rand($defenders);
     }
 
@@ -95,7 +99,7 @@ class TurnManager
     {
         $this->changeRoles();
         $this->computeCurrentTurnOrder();
-        $this->currentPlayer = 0;
+        $this->currentPlayer  = 0;
         $this->turnIsFinished = false;
     }
 
